@@ -28,6 +28,7 @@ class Jet(pygame.sprite.Sprite):
     def update(self):
         print(self.y_velocity)
         self.y += self.y_velocity
+        self.y = max(0, min(self.y, screen_height - self.rect.height))
         self.rect.y = self.y
 
     def draw(self, screen):
