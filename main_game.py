@@ -24,8 +24,12 @@ while running:
 
         player.stop()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                player.move_up()
+            if event.key == pygame.K_UP:
+                player.y_velocity = PLAYER_SPEED - gravity
+        else:
+            player.gravity_effect()
+
+
 
     screen.blit(background, (0, 0))
 
