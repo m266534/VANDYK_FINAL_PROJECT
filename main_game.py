@@ -4,6 +4,7 @@ import random
 from game_parameters import *
 from utilities import draw_background
 from player import Jet, jets
+from goats import Goat, goats
 
 pygame.init()
 
@@ -22,6 +23,9 @@ welcome_timer = 15 * 60
 player = Jet(screen_width / 2, screen_height / 2)
 jets.add(player)
 running = True
+
+for _ in range(1):
+    goats.add(Goat(random.randint(screen_width, screen_width*2), random.randint(tile_size, screen_height - tile_size)))
 
 while running:
     for event in pygame.event.get():
@@ -44,13 +48,11 @@ while running:
     else:
         screen.blit(background, (0,0))
 
-
-
-    # screen.blit(background, (0, 0))
-
+        goats.update()
         # jets.update()
         player.update()
 
+        goats.draw(screen)
         # jets.draw(screen)
         player.draw(screen)
 
