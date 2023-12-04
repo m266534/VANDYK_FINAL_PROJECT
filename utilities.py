@@ -23,3 +23,4 @@ def draw_background(screen):
         screen.blit(clouds, (x, screen_height / 16))
 
 
+

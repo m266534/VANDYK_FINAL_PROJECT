@@ -4,17 +4,17 @@ import random
 from game_parameters import *
 from utilities import draw_background
 from player import Jet, jets
-from goats import Goat, goats
+from goats2 import Goat, goats
 
 pygame.init()
 
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Using blit to draw tiles")
+pygame.display.set_caption("Flappy Jet")
 
 background = screen.copy()
 draw_background(background)
 
-clock = pygame.time.Clock
+clock = pygame.time.Clock()
 welcome_font = pygame.font.Font("../VANDYK_FINAL_PROJECT/assets/fonts/FlappyBirdy.ttf",size = 75)
 welcome_text = welcome_font.render("Welcome to Flappy Jet", True, (255, 69, 0))
 welcome_rect = welcome_text.get_rect(center = (screen_width//2, screen_height//2))
@@ -22,10 +22,16 @@ welcome_timer = 15 * 60
 
 player = Jet(screen_width / 2, screen_height / 2)
 jets.add(player)
+
+goat1 = Goat(screen_width, 0, 1 )
+goats.add(goat1)
+
+goat_size = goat1.image.get_size()
+goat2 = Goat(screen_width, screen_height - goat_size[1], 0)
+goats.add(goat2)
+
 running = True
 
-for _ in range(1):
-    goats.add(Goat(random.randint(screen_width, screen_width*2), random.randint(tile_size, screen_height - tile_size)))
 
 while running:
     for event in pygame.event.get():
@@ -48,15 +54,26 @@ while running:
     else:
         screen.blit(background, (0,0))
 
+
         goats.update()
-        # jets.update()
         player.update()
 
+        for goat1 in goats:
+            if goat1.rect.x < -goat1.rect.width:
+                goats.remove(goat1)
+                goats.add(Goat(screen_width, 0, 1 ))
+
+        for goat2 in goats:
+            if goat2.rect.x < -goat2.rect.width:
+                goats.remove(goat2)
+                goats.add(Goat(screen_width, screen_height - goat_size[1], 0))
+
         goats.draw(screen)
-        # jets.draw(screen)
         player.draw(screen)
 
-    pygame.display.flip()
+        pygame.display.flip()
+
+
 
 pygame.quit()
 sys.exit()
