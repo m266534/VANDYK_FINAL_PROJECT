@@ -29,10 +29,9 @@ class Goat(pygame.sprite.Sprite):
         self.rect.x = self.x
 
 
-
-
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
 
-goats = pygame.sprite.Group()
+goats1 = pygame.sprite.Group()
+goats2 = pygame.sprite.Group()
