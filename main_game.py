@@ -19,6 +19,7 @@ welcome_font = pygame.font.Font("../VANDYK_FINAL_PROJECT/assets/fonts/FlappyBird
 welcome_text = welcome_font.render("Welcome to Flappy Jet", True, (255, 69, 0))
 welcome_rect = welcome_text.get_rect(center = (screen_width//2, screen_height//2))
 welcome_timer = 15 * 60
+score_font = pygame.font.Font("../VANDYK_FINAL_PROJECT/assets/fonts/Arcade.ttf", size = 35)
 
 player = Jet(screen_width / 2, screen_height / 2)
 jets.add(player)
@@ -29,6 +30,8 @@ goats1.add(goat1)
 goat_size = goat1.image.get_size()
 goat2 = Goat(screen_width, screen_height - goat_size[1], 0)
 goats2.add(goat2)
+
+score = 0
 
 running = True
 
@@ -41,7 +44,7 @@ while running:
         player.stop()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                player.y_velocity = 1.5*(PLAYER_SPEED - gravity)
+                player.y_velocity = 1.75*(PLAYER_SPEED - gravity)
         else:
             player.gravity_effect()
 
@@ -59,22 +62,29 @@ while running:
         goats2.update()
         player.update()
 
+        # if goat1.rect.x and goat2.rect.x < player.rect.x:
+        #     score += .5
         for goat1 in goats1:
             if goat1.rect.x < -goat1.rect.width:
                 goats1.remove(goat1)
                 goat1 = Goat(screen_width, 0, 1 )
                 goats1.add(goat1)
+                score += 1
 
         for goat2 in goats2:
             if goat2.rect.x < -goat2.rect.width:
                 goats2.remove(goat2)
                 goat2 = Goat(screen_width, screen_height - goat_size[1], 0)
                 goats2.add(goat2)
+                score += 1
 
 
         goats1.draw(screen)
         goats2.draw(screen)
         player.draw(screen)
+
+        text = score_font.render(f"{score}", True, (255, 69, 0))
+        screen.blit(text, (screen_width - text.get_width() - 10, 0))
 
         pygame.display.flip()
 
