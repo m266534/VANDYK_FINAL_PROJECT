@@ -23,7 +23,7 @@ class Jet(pygame.sprite.Sprite):
         self.rect.y = self.y
 
     def stop(self):
-        self.y_velocity = 0
+        self.y_velocity = gravity
 
     def update(self):
         self.y += self.y_velocity

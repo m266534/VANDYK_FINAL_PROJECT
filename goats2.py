@@ -15,11 +15,13 @@ class Goat(pygame.sprite.Sprite):
             self.image.set_colorkey((255, 255, 255))
 
         self.goat_size = self.image.get_size()
-        self.image = pygame.transform.scale(self.image, (self.goat_size[0] * 2.5, self.goat_size[1] * 2.5))
+        self.image = pygame.transform.scale(self.image, (self.goat_size[0] * 2.2, self.goat_size[1] * 2.2))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.speed = random.uniform(GOAT_SPEED_MIN, GOAT_SPEED_MAX)
+        # self.speed_increase_interval = 20
+        # self.timer = 0
 
 
 

@@ -6,6 +6,6 @@ GOAT_SPEED_MIN = .25
 GOAT_SPEED_MAX= .75
 PLAYER_SPEED = .25
 gravity = .3
-gap = 50
-goat_spawn = 120
-FPS = 60
+
+
+number_lives = 1
