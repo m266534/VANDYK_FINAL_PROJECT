@@ -56,12 +56,10 @@ while lives > 0:
         player.stop()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                player.y_velocity = 2.3*(PLAYER_SPEED-gravity)
+                player.y_velocity = 1.7*(PLAYER_SPEED-gravity)
 
-        else:
-            player.gravity_effect()
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0]:
                 pos = player.rect.midright
                 mouse_x, mouse_y = pygame.mouse.get_pos()
