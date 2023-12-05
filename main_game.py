@@ -2,9 +2,12 @@ import pygame
 import sys
 import random
 from game_parameters import *
-from utilities import draw_background
+from utilities import draw_background, add_missiles
 from player import Jet, jets
 from goats2 import Goat, goats1, goats2
+from bad_jet import Bad, bad_guys
+from missile import Missile, missiles
+from math import atan2
 import pygame.mixer
 
 pygame.init()
@@ -37,6 +40,9 @@ goat_size = goat1.image.get_size()
 goat2 = Goat(screen_width, screen_height - goat_size[1], 0)
 goats2.add(goat2)
 
+for _ in range(1):
+    bad_guys.add(Bad(random.randint(0, screen_width - tile_size),  0))
+
 score = 0
 lives = number_lives
 running = True
@@ -50,9 +56,17 @@ while lives > 0:
         player.stop()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                player.y_velocity = 1.75*(PLAYER_SPEED - gravity)
+                player.y_velocity = 2.3*(PLAYER_SPEED-gravity)
+
         else:
             player.gravity_effect()
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
+                pos = player.rect.midright
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                angle = - atan2(mouse_y - pos[1], mouse_x - pos[0])
+                add_missiles(1, pos, angle)
 
     if welcome_timer > 0:
         screen.blit(background, (0, 0))
@@ -67,6 +81,11 @@ while lives > 0:
         goats1.update()
         goats2.update()
         player.update()
+        missiles.update(player)
+
+        for bad in bad_guys:
+            theta = atan2(player.y - bad.y, player.x - bad.x)
+            bad.update(theta)
 
 
         death1 = pygame.sprite.spritecollide(player, goats1, True)
@@ -76,8 +95,23 @@ while lives > 0:
             player.stop()
             pygame.mixer.Sound.play(crash_sound)
             lives -= 1
-            if lives == 0:
-                break
+
+
+        crash = pygame.sprite.spritecollide(player, bad_guys, True)
+        if crash:
+            lives -= 1
+
+        for missile in missiles:
+            if missile.rect.y > screen_height:
+                missiles.remove(missile)
+
+            for bad_guy in bad_guys:
+                missile_enemy = pygame.sprite.spritecollide(missile, bad_guys, True)
+                if missile_enemy:
+                    score += len(missile_enemy)
+                    bad_guys.remove(missile_enemy)
+                    bad_guys.add(Bad(random.randint(0, screen_width - tile_size),  0))
+                    missiles.remove(missile)
 
 
         for goat1 in goats1:
@@ -100,6 +134,10 @@ while lives > 0:
         goats1.draw(screen)
         goats2.draw(screen)
         player.draw(screen)
+        bad_guys.draw(screen)
+
+        for missile in missiles:
+            missile.draw_missile(screen)
 
         text = score_font.render(f"{score}", True, (255, 69, 0))
         screen.blit(text, (screen_width - text.get_width() - 10, 0))

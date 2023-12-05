@@ -1,6 +1,7 @@
 import pygame
 import random
 from game_parameters import *
+from missile import Missile, missiles
 
 def draw_background(screen):
     clouds = pygame.image.load("../VANDYK_FINAL_PROJECT/assets/sprites/small_clouds.png").convert()
@@ -22,5 +23,7 @@ def draw_background(screen):
         x = random.randint(0, screen_width)
         screen.blit(clouds, (x, screen_height / 16))
 
-
+def add_missiles(num_missiles, pos, angle):
+    for _ in range(num_missiles):
+        missiles.add(Missile(pos[0], pos[1], angle))
 
