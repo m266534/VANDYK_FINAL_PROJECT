@@ -23,8 +23,10 @@ draw_background(background)
 
 clock = pygame.time.Clock()
 welcome_font = pygame.font.Font("../VANDYK_FINAL_PROJECT/assets/fonts/FlappyBirdy.ttf",size = 75)
-welcome_text = welcome_font.render("Welcome to Flappy Jet", True, (255, 69, 0))
+welcome_text = welcome_font.render("Welcome to Flappy Jet", True, (0, 128, 0))
 welcome_rect = welcome_text.get_rect(center = (screen_width//2, screen_height//2))
+starting_text = welcome_font.render("Press Space Bar to Start", True, (0, 128, 0))
+starting_rect = starting_text.get_rect(center=(screen_width // 2, screen_height // 2 + 50))
 welcome_timer = 15 * 60
 score_font = pygame.font.Font("../VANDYK_FINAL_PROJECT/assets/fonts/Arcade.ttf", size = 35)
 score_sound = pygame.mixer.Sound("../VANDYK_FINAL_PROJECT/assets/sounds/score.wav")
@@ -40,13 +42,32 @@ goat_size = goat1.image.get_size()
 goat2 = Goat(screen_width, screen_height - goat_size[1], 0)
 goats2.add(goat2)
 
-for _ in range(1):
-    bad_guys.add(Bad(random.randint(0, screen_width - tile_size),  0))
+# for _ in range(1):
+#     bad_guys.add(Bad(random.randint(0, screen_width - tile_size),  0))
 
 score = 0
 lives = number_lives
 running = True
 
+welcome_screen = True
+
+while welcome_screen:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            welcome_screen = False
+
+    screen.blit(background, (0, 0))
+    screen.blit(welcome_text, welcome_rect)
+    screen.blit(starting_text, starting_rect)
+    pygame.display.flip()
+    clock.tick(60)
+
+start_time = pygame.time.get_ticks()  # Record the start time
+time_to_add_first_bad_guy = 15000
+time_to_add_second_bad_guy = 30000
 
 while lives > 0:
     for event in pygame.event.get():
@@ -75,11 +96,21 @@ while lives > 0:
     else:
         screen.blit(background, (0,0))
 
-
+        player.update()
         goats1.update()
         goats2.update()
-        player.update()
         missiles.update(player)
+
+        current_time = pygame.time.get_ticks()
+        time_elapsed = current_time - start_time
+
+        # Check if it's time to add the first bad_guy
+        if time_elapsed >= time_to_add_first_bad_guy and len(bad_guys) == 0:
+            bad_guys.add(Bad(random.randint(0, screen_width - tile_size), 0))
+
+        # Check if it's time to add the second bad_guy
+        if time_elapsed >= time_to_add_second_bad_guy and len(bad_guys) == 1:
+            bad_guys.add(Bad(random.randint(0, screen_width - tile_size), 0))
 
         for bad in bad_guys:
             theta = atan2(player.y - bad.y, player.x - bad.x)
@@ -128,10 +159,9 @@ while lives > 0:
                 score += 1
                 pygame.mixer.Sound.play(score_sound)
 
-
+        player.draw(screen)
         goats1.draw(screen)
         goats2.draw(screen)
-        player.draw(screen)
         bad_guys.draw(screen)
 
         for missile in missiles:

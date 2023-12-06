@@ -2,13 +2,13 @@ tile_size = 64
 screen_width = 800
 screen_height = 600
 
-GOAT_SPEED_MIN = .05
-GOAT_SPEED_MAX= .1
-PLAYER_SPEED = -.1
+GOAT_SPEED_MIN = .2
+GOAT_SPEED_MAX= .4
+PLAYER_SPEED = -.05
 gravity = .26
 
-BAD_SPEED_MIN = .05
-BAD_SPEED_MAX = .08
+BAD_SPEED_MIN = .02
+BAD_SPEED_MAX = .05
 
 number_lives = 1
 

@@ -15,7 +15,7 @@ class Goat(pygame.sprite.Sprite):
             self.image.set_colorkey((255, 255, 255))
 
         self.goat_size = self.image.get_size()
-        self.image = pygame.transform.scale(self.image, (self.goat_size[0] * 2, self.goat_size[1] * 2))
+        self.image = pygame.transform.scale(self.image, (self.goat_size[0] * 1.75, self.goat_size[1] * 1.75))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
