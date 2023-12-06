@@ -154,34 +154,41 @@ while lives > 0:
             theta = atan2(player.y - bad.y, player.x - bad.x)
             bad.update(theta)
 
-
+        # Check to see whether or the player and the goats collide
         death1 = pygame.sprite.spritecollide(player, goats1, True)
         death2 = pygame.sprite.spritecollide(player, goats2, True)
 
+        # If there is a collision, subtract a life
         if death1 or death2:
             player.stop()
             pygame.mixer.Sound.play(crash_sound)
             lives -= 1
 
-
+        # Check to see whether the play and the bad guys collide
         crash = pygame.sprite.spritecollide(player, bad_guys, True)
+
+        # If there is a collision, subtract a life
         if crash:
+            pygame.mixer.Sound.play(crash_sound)
             lives -= 1
 
+        # Remove a shot missile that goes off the screen
         for missile in missiles:
             if missile.rect.y > screen_height:
                 missiles.remove(missile)
 
+            # Manage missile collisions and points
             for bad_guy in bad_guys:
+                # Check for the collision
                 missile_enemy = pygame.sprite.spritecollide(missile, bad_guys, True)
                 if missile_enemy:
-                    score += len(missile_enemy)
-                    pygame.mixer.Sound.play(explosion_sound)
-                    bad_guys.remove(missile_enemy)
-                    bad_guys.add(Bad(random.randint(0, screen_width - tile_size),  0))
-                    missiles.remove(missile)
+                    score += len(missile_enemy) # Increase score if there is a collision
+                    pygame.mixer.Sound.play(explosion_sound) # Play a sound if there is a collision
+                    bad_guys.remove(missile_enemy) # Remove the bad guy if they are shot
+                    bad_guys.add(Bad(random.randint(0, screen_width - tile_size),  0)) # Add a new bad guy to the screen
+                    missiles.remove(missile) # Remove the missile after a collision
 
-
+        # Handle removing and adding the top goat once it leaves the screen
         for goat1 in goats1:
             if goat1.rect.x < -goat1.rect.width:
                 goats1.remove(goat1)
@@ -190,6 +197,7 @@ while lives > 0:
                 score += 1
                 pygame.mixer.Sound.play(score_sound)
 
+        # Handle removing and adding the bottom goat once it leaves the screen
         for goat2 in goats2:
             if goat2.rect.x < -goat2.rect.width:
                 goats2.remove(goat2)
@@ -198,35 +206,45 @@ while lives > 0:
                 score += 1
                 pygame.mixer.Sound.play(score_sound)
 
+        # Draw the game objects onto the screen
         player.draw(screen)
         goats1.draw(screen)
         goats2.draw(screen)
         bad_guys.draw(screen)
 
+        # For loop in order to draw missiles when shot
         for missile in missiles:
             missile.draw_missile(screen)
 
+        # Display the score on the top right of the screen
         text = score_font.render(f"{score}", True, (255, 69, 0))
         screen.blit(text, (screen_width - text.get_width() - 10, 0))
 
+        # Update the display
         pygame.display.flip()
 
 
-
+# Keep the background and the player on the screen when the game is over
 screen.blit(background, (0,0))
 player.draw(screen)
+
+# Display the "Game Over" message
 message = score_font.render("Game Over", True, (0,0,0))
 screen.blit(message, (screen_width / 2 - message.get_width() / 2, screen_height / 2 - message.get_height() / 2))
 
+# Display the score the user earned
 score_text = score_font.render(f"Score: {score}", True, (0,0,0))
 screen.blit(score_text, (screen_width / 2 -score_text.get_width() / 2, screen_height /2 + message.get_height()))
 
+# Display the time the user survived
 time_text = clock_font.render(f"Time: {formatted_time}", True, (0, 0, 0))
 screen.blit(time_text, (screen_width / 2 - time_text.get_width() / 2, screen_height / 2 + score_text.get_height() + message.get_height()))
+
+# Update the display
 pygame.display.flip()
 
 
-
+# Have the game close when the user closes the screen
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
